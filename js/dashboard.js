@@ -27,17 +27,14 @@ const Card = ({ children, className }) => (
         {children}
     </button>
 );
-
   
-const TabsContent = ({ value, children, isActive }) => {
+  const TabsContent = ({ value, children, isActive }) => {
     return (
-        <div className={`${isActive ? "block" : "hidden"} space-y-4`}>
+        <div className={`${isActive ? "block" : "hidden"}`}>
             {children}
         </div>
     );
 };
-
-
 
   const { useState, useEffect } = React;
 
@@ -45,7 +42,7 @@ const TabsContent = ({ value, children, isActive }) => {
     const [activeTab, setActiveTab] = useState(defaultValue);
 
     return (
-        <div className={`${className} space-y-6`}>
+        <div className={className}>
             <div className="flex border-b mb-4">
                 {React.Children.map(children, (child) => {
                     if (child.type === TabsTrigger) {
@@ -58,8 +55,7 @@ const TabsContent = ({ value, children, isActive }) => {
                 })}
             </div>
 
-            {/* Ensure that only the content of the active tab is visible */}
-            <div className="space-y-6">
+            <div className="space-y-6 mt-4">
                 {React.Children.map(children, (child) => {
                     if (child.type === TabsContent && child.props.value === activeTab) {
                         return child;
@@ -70,8 +66,8 @@ const TabsContent = ({ value, children, isActive }) => {
         </div>
     );
 };
-  
 
+ 
 if (typeof Recharts === 'undefined') {
     console.error('Recharts not loaded!');
 } else {
