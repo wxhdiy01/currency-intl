@@ -397,21 +397,18 @@ const GeopoliticalPanel = ({ data }) => (
 // Main Dashboard Component
 function FeatureDashboard() {
     const [data, setData] = useState([]);
-    const [activeTab, setActiveTab] = useState('currency_measures');
-  
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
-      const loadData = async () => {
-        try {
-          const response = await window.fs.readFile('combined_currency_data_20250201.xlsx');
-          const workbook = XLSX.read(response, { 
-            cellDates: true,
-            cellNF: true,
-            cellStyles: true,
-            cellFormulas: true,
-            sheetStubs: true
-          });
-          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+        const loadData = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('https://currency-intl-data.s3.us-east-1.amazonaws.com/combined_currency_data_20250201.xlsx');
+                const arrayBuffer = await response.arrayBuffer();
+                const data = new Uint8Array(arrayBuffer);
+                const workbook = XLSX.read(data, { cellDates: true, cellNF: true });
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
                 const processedData = jsonData.map(row => ({
                     year: row.__EMPTY,
