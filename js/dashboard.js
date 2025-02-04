@@ -15,10 +15,6 @@ const Card = ({ children, className }) => (
     <div className="p-4">{children}</div>
   );
   
-  const Tabs = ({ children, defaultValue, className }) => (
-    <div className={className}>{children}</div>
-  );
-  
   const TabsList = ({ children, className }) => (
     <div className={`flex border-b mb-4 ${className}`}>{children}</div>
   );
@@ -31,7 +27,36 @@ const Card = ({ children, className }) => (
     <div>{children}</div>
   );
 
-const { useState, useEffect } = React;
+  const { useState, useEffect } = React;
+
+  // Adjust the Tab structure with dynamic state
+  const Tabs = ({ children, defaultValue, className }) => {
+      const [activeTab, setActiveTab] = useState(defaultValue);
+  
+      return (
+          <div className={className}>
+              <div className="flex border-b mb-4">
+                  {React.Children.map(children, (child) => {
+                      if (child.type === TabsTrigger) {
+                          return React.cloneElement(child, {
+                              onClick: () => setActiveTab(child.props.value),
+                              className: activeTab === child.props.value ? 'px-4 py-2 bg-gray-200' : 'px-4 py-2 hover:bg-gray-100'
+                          });
+                      }
+                      return child;
+                  })}
+              </div>
+  
+              {React.Children.map(children, (child) => {
+                  if (child.type === TabsContent && child.props.value === activeTab) {
+                      return child;
+                  }
+                  return null;
+              })}
+          </div>
+      );
+  };
+
 if (typeof Recharts === 'undefined') {
     console.error('Recharts not loaded!');
 } else {
@@ -118,105 +143,60 @@ return (
 
 // Panel Components
 const InternationalCurrencyPanel = ({ data }) => {
-const reserveConfig = [
-    { dataKey: 'reserve_share_USD', name: 'USD', currency: 'USA' },
-    { dataKey: 'reserve_share_EUR', name: 'EUR', currency: 'EMU' },
-    { dataKey: 'reserve_share_GBP', name: 'GBP', currency: 'GBR' },
-    { dataKey: 'reserve_share_JPY', name: 'JPY', currency: 'JPN' },
-    { dataKey: 'reserve_share_CNY', name: 'CNY', currency: 'CHN' },
-    { dataKey: 'reserve_share_CHF', name: 'CHF', currency: 'CHE' }
-];
-
-const anchorConfig = [
-    { dataKey: 'anchor_share_USD', name: 'USD', currency: 'USA' },
-    { dataKey: 'anchor_share_EUR', name: 'EUR', currency: 'EMU' },
-    { dataKey: 'anchor_share_GBP', name: 'GBP', currency: 'GBR' },
-    { dataKey: 'anchor_share_JPY', name: 'JPY', currency: 'JPN' }
-];
-
-const fxConfig = [
-    { dataKey: 'fx_turnover_USD', name: 'USD', currency: 'USA' },
-    { dataKey: 'fx_turnover_EUR', name: 'EUR', currency: 'EMU' },
-    { dataKey: 'fx_turnover_GBP', name: 'GBP', currency: 'GBR' },
-    { dataKey: 'fx_turnover_JPY', name: 'JPY', currency: 'JPN' },
-    { dataKey: 'fx_turnover_CNY', name: 'CNY', currency: 'CHN' },
-    { dataKey: 'fx_turnover_CHF', name: 'CHF', currency: 'CHE' }
-];
-
-const swiftConfig = [
-    { dataKey: 'swift_share_USD', name: 'USD', currency: 'USA' },
-    { dataKey: 'swift_share_EUR', name: 'EUR', currency: 'EMU' },
-    { dataKey: 'swift_share_GBP', name: 'GBP', currency: 'GBR' },
-    { dataKey: 'swift_share_JPY', name: 'JPY', currency: 'JPN' },
-    { dataKey: 'swift_share_CNY', name: 'CNY', currency: 'CHN' },
-    { dataKey: 'swift_share_CHF', name: 'CHF', currency: 'CHE' }
-];
-
-const debtDenomConfig = [
-    { dataKey: 'debt_denom_USD', name: 'USD', currency: 'USA' },
-    { dataKey: 'debt_denom_EUR', name: 'EUR', currency: 'EMU' },
-    { dataKey: 'debt_denom_GBP', name: 'GBP', currency: 'GBR' },
-    { dataKey: 'debt_denom_JPY', name: 'JPY', currency: 'JPN' },
-    { dataKey: 'debt_denom_CHF', name: 'CHF', currency: 'CHE' }
-];
-
-const bondConfig = [
-    { dataKey: 'bond_share_USD', name: 'USD', currency: 'USA' },
-    { dataKey: 'bond_share_EUR', name: 'EUR', currency: 'EMU' }
-];
-
-const debtShareConfig = [
-    { dataKey: 'debt_share_USD', name: 'USD', currency: 'USA' },
-    { dataKey: 'debt_share_EUR', name: 'EUR', currency: 'EMU' },
-    { dataKey: 'debt_share_JPY', name: 'JPY', currency: 'JPN' }
-];
-
-return (
-    <TabsContent value="currency_measures">
-    <FeatureChart 
-        title="Official Foreign Exchange Reserves" 
-        data={data} 
-        dataKeys={reserveConfig}
-        yAxisLabel="Share (%)" 
-    />
-    <FeatureChart 
-        title="Currency Anchor Share" 
-        data={data} 
-        dataKeys={anchorConfig}
-        yAxisLabel="Share (%)" 
-    />
-    <FeatureChart 
-        title="FX Market Turnover" 
-        data={data} 
-        dataKeys={fxConfig}
-        yAxisLabel="Share (%)" 
-    />
-    <FeatureChart 
-        title="SWIFT Payment Share" 
-        data={data} 
-        dataKeys={swiftConfig}
-        yAxisLabel="Share (%)" 
-    />
-    <FeatureChart 
-        title="Currency Composition of External Debt" 
-        data={data} 
-        dataKeys={debtDenomConfig}
-        yAxisLabel="Share (%)" 
-    />
-    <FeatureChart 
-        title="Currency Denomination of International Bond Issuance" 
-        data={data} 
-        dataKeys={bondConfig}
-        yAxisLabel="Share (%)" 
-    />
-    <FeatureChart 
-        title="Currency Composition of Outstanding International Debt Securities" 
-        data={data} 
-        dataKeys={debtShareConfig}
-        yAxisLabel="Share (%)" 
-    />
-    </TabsContent>
-);
+    return (
+        <TabsContent value="currency_measures">
+            {/* Store of Value */}
+            <h4 className="text-xl font-semibold mt-4">Store of Value</h4>
+            <FeatureChart 
+                title="Official Foreign Exchange Reserves" 
+                data={data} 
+                dataKeys={[{ dataKey: 'reserve_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'reserve_share_EUR', name: 'EUR', currency: 'EMU' }]} 
+                yAxisLabel="Share (%)" 
+            />
+            <FeatureChart 
+                title="Currency Composition of Outstanding International Debt Securities" 
+                data={data} 
+                dataKeys={[{ dataKey: 'debt_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'debt_share_EUR', name: 'EUR', currency: 'EMU' }]} 
+                yAxisLabel="Share (%)" 
+            />
+            
+            {/* Medium of Exchange */}
+            <h4 className="text-xl font-semibold mt-4">Medium of Exchange</h4>
+            <FeatureChart 
+                title="FX Market Turnover" 
+                data={data} 
+                dataKeys={[{ dataKey: 'fx_turnover_USD', name: 'USD', currency: 'USA' }, { dataKey: 'fx_turnover_EUR', name: 'EUR', currency: 'EMU' }]} 
+                yAxisLabel="Share (%)" 
+            />
+            <FeatureChart 
+                title="SWIFT Payment Share" 
+                data={data} 
+                dataKeys={[{ dataKey: 'swift_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'swift_share_EUR', name: 'EUR', currency: 'EMU' }]} 
+                yAxisLabel="Share (%)" 
+            />
+            
+            {/* Unit of Account */}
+            <h4 className="text-xl font-semibold mt-4">Unit of Account</h4>
+            <FeatureChart 
+                title="Currency Anchor Share" 
+                data={data} 
+                dataKeys={[{ dataKey: 'anchor_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'anchor_share_EUR', name: 'EUR', currency: 'EMU' }]} 
+                yAxisLabel="Share (%)" 
+            />
+            <FeatureChart 
+                title="Currency Composition of External Debt" 
+                data={data} 
+                dataKeys={[{ dataKey: 'debt_denom_USD', name: 'USD', currency: 'USA' }, { dataKey: 'debt_denom_EUR', name: 'EUR', currency: 'EMU' }]} 
+                yAxisLabel="Share (%)" 
+            />
+            <FeatureChart 
+                title="Currency Denomination of International Bond Issuance" 
+                data={data} 
+                dataKeys={[{ dataKey: 'bond_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'bond_share_EUR', name: 'EUR', currency: 'EMU' }]} 
+                yAxisLabel="Share (%)" 
+            />
+        </TabsContent>
+    );
 };
 
 const EconomicPanel = ({ data }) => (
@@ -550,27 +530,22 @@ loadData();
 }, []);
 
 return (
-<div className="space-y-6 p-6">
-<Tabs defaultValue="currency_measures" className="w-full">
-    <TabsList className="grid w-full grid-cols-7">
-    <TabsTrigger value="currency_measures">Int'l Currency</TabsTrigger>
-    <TabsTrigger value="economic">Economic Size</TabsTrigger>
-    <TabsTrigger value="financial">Financial Markets</TabsTrigger>
-    <TabsTrigger value="currency">Currency Value</TabsTrigger>
-    <TabsTrigger value="openness">Financial Openness</TabsTrigger>
-    <TabsTrigger value="institutional">Institutional</TabsTrigger>
-    <TabsTrigger value="geopolitical">Geopolitical</TabsTrigger>
-    </TabsList>
-    
-    <InternationalCurrencyPanel data={data} />
-    <EconomicPanel data={data} />
-    <FinancialPanel data={data} />
-    <CurrencyPanel data={data} />
-    <OpennessPanel data={data} />
-    <InstitutionalPanel data={data} />
-    <GeopoliticalPanel data={data} />
-</Tabs>
-</div>
+    <div className="space-y-6 p-6">
+        <Tabs defaultValue="currency_measures" className="w-full">
+            <TabsList className="grid w-full grid-cols-7">
+                <TabsTrigger value="currency_measures">Int'l Currency</TabsTrigger>
+                <TabsTrigger value="economic">Economic Size</TabsTrigger>
+                <TabsTrigger value="financial">Financial Markets</TabsTrigger>
+                <TabsTrigger value="currency">Currency Value</TabsTrigger>
+                <TabsTrigger value="openness">Financial Openness</TabsTrigger>
+                <TabsTrigger value="institutional">Institutional</TabsTrigger>
+                <TabsTrigger value="geopolitical">Geopolitical</TabsTrigger>
+            </TabsList>
+
+            <InternationalCurrencyPanel data={data} />
+            {/* Other Panel Components */}
+        </Tabs>
+    </div>
 );
 }
 
