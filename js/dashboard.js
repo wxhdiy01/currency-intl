@@ -29,44 +29,47 @@ const Card = ({ children, className }) => (
 );
 
   
-  const TabsContent = ({ value, children, isActive }) => {
-    if (isActive) {
-        return <div>{children}</div>;
-    }
-    return null;
+const TabsContent = ({ value, children, isActive }) => {
+    return (
+        <div className={`${isActive ? "block" : "hidden"} space-y-4`}>
+            {children}
+        </div>
+    );
 };
+
 
 
   const { useState, useEffect } = React;
 
   const Tabs = ({ children, defaultValue, className }) => {
-      const [activeTab, setActiveTab] = useState(defaultValue);
-  
-      return (
-          <div className={className}>
-              <div className="flex border-b mb-4">
-                  {React.Children.map(children, (child) => {
-                      if (child.type === TabsTrigger) {
-                          return React.cloneElement(child, {
-                              onClick: () => setActiveTab(child.props.value),
-                              isActive: activeTab === child.props.value
-                          });
-                      }
-                      return child;
-                  })}
-              </div>
-  
-              {React.Children.map(children, (child) => {
-                  if (child.type === TabsContent) {
-                      return React.cloneElement(child, {
-                          isActive: activeTab === child.props.value
-                      });
-                  }
-                  return child;
-              })}
-          </div>
-      );
-  };
+    const [activeTab, setActiveTab] = useState(defaultValue);
+
+    return (
+        <div className={`${className} space-y-6`}>
+            <div className="flex border-b mb-4">
+                {React.Children.map(children, (child) => {
+                    if (child.type === TabsTrigger) {
+                        return React.cloneElement(child, {
+                            onClick: () => setActiveTab(child.props.value),
+                            isActive: activeTab === child.props.value
+                        });
+                    }
+                    return child;
+                })}
+            </div>
+
+            {/* Ensure that only the content of the active tab is visible */}
+            <div className="space-y-6">
+                {React.Children.map(children, (child) => {
+                    if (child.type === TabsContent && child.props.value === activeTab) {
+                        return child;
+                    }
+                    return null;
+                })}
+            </div>
+        </div>
+    );
+};
   
 
 if (typeof Recharts === 'undefined') {
@@ -538,9 +541,9 @@ loadData();
 }, []);
 
 return (
-    <div className="space-y-6 p-6">
+    <div className="p-6">
         <Tabs defaultValue="currency_measures" className="w-full">
-            <TabsList className="grid w-full grid-cols-7">
+            <TabsList className="flex gap-4">
                 <TabsTrigger value="currency_measures">Int'l Currency</TabsTrigger>
                 <TabsTrigger value="economic">Economic Size</TabsTrigger>
                 <TabsTrigger value="financial">Financial Markets</TabsTrigger>
@@ -550,6 +553,7 @@ return (
                 <TabsTrigger value="geopolitical">Geopolitical</TabsTrigger>
             </TabsList>
 
+            {/* Add All Panels Here */}
             <InternationalCurrencyPanel data={data} />
             <EconomicPanel data={data} />
             <FinancialPanel data={data} />
