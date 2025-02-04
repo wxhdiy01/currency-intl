@@ -15,33 +15,66 @@ const Card = ({ children, className }) => (
     <div className="p-4">{children}</div>
   );
   
-  const Tabs = ({ children, defaultValue, className }) => (
-    <div className={className}>{children}</div>
-  );
-  
-  const TabsList = ({ children, className }) => (
-    <div className={`flex border-b mb-4 ${className}`}>{children}</div>
-  );
-  
-  const TabsTrigger = ({ value, children }) => (
-    <button className="px-4 py-2 hover:bg-gray-100">{children}</button>
-  );
-  
-  const TabsContent = ({ value, children }) => (
-    <div>{children}</div>
-  );
-
+  // Get React hooks from global React
   const { useState, useEffect } = React;
-
-if (typeof Recharts === 'undefined') {
-    console.error('Recharts not loaded!');
-} else {
-    console.log('Recharts loaded successfully');
-}
-const { 
+  
+  // Get Recharts components from global Recharts
+  const { 
     LineChart, Line, XAxis, YAxis, CartesianGrid, 
     Tooltip, Legend, ResponsiveContainer 
-} = Recharts;  // Changed from window.Recharts to just Recharts
+  } = Recharts;
+
+  const TabsList = ({ activeTab, setActiveTab, className }) => (
+    <div className={`flex flex-wrap gap-2 border-b mb-4 ${className}`}>
+      <button 
+        className={`px-4 py-2 ${activeTab === 'currency_measures' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+        onClick={() => setActiveTab('currency_measures')}
+      >
+        Int'l Currency
+      </button>
+      <button 
+        className={`px-4 py-2 ${activeTab === 'economic' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+        onClick={() => setActiveTab('economic')}
+      >
+        Economic Size
+      </button>
+      <button 
+        className={`px-4 py-2 ${activeTab === 'financial' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+        onClick={() => setActiveTab('financial')}
+      >
+        Financial Markets
+      </button>
+      <button 
+        className={`px-4 py-2 ${activeTab === 'currency' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+        onClick={() => setActiveTab('currency')}
+      >
+        Currency Value
+      </button>
+      <button 
+        className={`px-4 py-2 ${activeTab === 'openness' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+        onClick={() => setActiveTab('openness')}
+      >
+        Financial Openness
+      </button>
+      <button 
+        className={`px-4 py-2 ${activeTab === 'institutional' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+        onClick={() => setActiveTab('institutional')}
+      >
+        Institutional
+      </button>
+      <button 
+        className={`px-4 py-2 ${activeTab === 'geopolitical' ? 'bg-blue-100 border-b-2 border-blue-500' : 'hover:bg-gray-100'}`}
+        onClick={() => setActiveTab('geopolitical')}
+      >
+        Geopolitical
+      </button>
+    </div>
+  );
+  
+  const TabPanel = ({ children, value, activeTab }) => {
+    if (value !== activeTab) return null;
+    return <div>{children}</div>;
+  };
 
 // Define all our utility constants
 const currencyColors = {
@@ -364,18 +397,21 @@ const GeopoliticalPanel = ({ data }) => (
 // Main Dashboard Component
 function FeatureDashboard() {
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-
+    const [activeTab, setActiveTab] = useState('currency_measures');
+  
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch('https://currency-intl-data.s3.us-east-1.amazonaws.com/combined_currency_data_20250201.xlsx');
-                const arrayBuffer = await response.arrayBuffer();
-                const data = new Uint8Array(arrayBuffer);
-                const workbook = XLSX.read(data, { cellDates: true, cellNF: true });
-                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+      const loadData = async () => {
+        try {
+          const response = await window.fs.readFile('combined_currency_data_20250201.xlsx');
+          const workbook = XLSX.read(response, { 
+            cellDates: true,
+            cellNF: true,
+            cellStyles: true,
+            cellFormulas: true,
+            sheetStubs: true
+          });
+          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+          const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
                 const processedData = jsonData.map(row => ({
                     year: row.__EMPTY,
@@ -556,29 +592,39 @@ loadData();
 
 return (
     <div className="p-6">
-        <Tabs defaultValue="currency_measures" className="w-full">
-            <TabsList className="flex gap-4">
-                <TabsTrigger value="currency_measures">Int'l Currency</TabsTrigger>
-                <TabsTrigger value="economic">Economic Size</TabsTrigger>
-                <TabsTrigger value="financial">Financial Markets</TabsTrigger>
-                <TabsTrigger value="currency">Currency Value</TabsTrigger>
-                <TabsTrigger value="openness">Financial Openness</TabsTrigger>
-                <TabsTrigger value="institutional">Institutional</TabsTrigger>
-                <TabsTrigger value="geopolitical">Geopolitical</TabsTrigger>
-            </TabsList>
-
-            {/* Add All Panels Here */}
-            <InternationalCurrencyPanel data={data} />
-            <EconomicPanel data={data} />
-            <FinancialPanel data={data} />
-            <CurrencyPanel data={data} />
-            <OpennessPanel data={data} />
-            <InstitutionalPanel data={data} />
-            <GeopoliticalPanel data={data} />
-        </Tabs>
+      <TabsList activeTab={activeTab} setActiveTab={setActiveTab} className="w-full" />
+      
+      <TabPanel value="currency_measures" activeTab={activeTab}>
+        <InternationalCurrencyPanel data={data} />
+      </TabPanel>
+      
+      <TabPanel value="economic" activeTab={activeTab}>
+        <EconomicPanel data={data} />
+      </TabPanel>
+      
+      <TabPanel value="financial" activeTab={activeTab}>
+        <FinancialPanel data={data} />
+      </TabPanel>
+      
+      <TabPanel value="currency" activeTab={activeTab}>
+        <CurrencyPanel data={data} />
+      </TabPanel>
+      
+      <TabPanel value="openness" activeTab={activeTab}>
+        <OpennessPanel data={data} />
+      </TabPanel>
+      
+      <TabPanel value="institutional" activeTab={activeTab}>
+        <InstitutionalPanel data={data} />
+      </TabPanel>
+      
+      <TabPanel value="geopolitical" activeTab={activeTab}>
+        <GeopoliticalPanel data={data} />
+      </TabPanel>
     </div>
-);
+  );
 }
 
+// Initialize the app
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(React.createElement(FeatureDashboard));
