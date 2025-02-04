@@ -1,3 +1,36 @@
+// Basic UI Components
+const Card = ({ children, className }) => (
+    <div className={`bg-white rounded-lg shadow-lg ${className}`}>{children}</div>
+  );
+  
+  const CardHeader = ({ children }) => (
+    <div className="p-4 border-b">{children}</div>
+  );
+  
+  const CardTitle = ({ children }) => (
+    <h3 className="text-lg font-bold">{children}</h3>
+  );
+  
+  const CardContent = ({ children }) => (
+    <div className="p-4">{children}</div>
+  );
+  
+  const Tabs = ({ children, defaultValue, className }) => (
+    <div className={className}>{children}</div>
+  );
+  
+  const TabsList = ({ children, className }) => (
+    <div className={`flex border-b mb-4 ${className}`}>{children}</div>
+  );
+  
+  const TabsTrigger = ({ value, children }) => (
+    <button className="px-4 py-2 hover:bg-gray-100">{children}</button>
+  );
+  
+  const TabsContent = ({ value, children }) => (
+    <div>{children}</div>
+  );
+
 const { useState, useEffect } = React;
 const { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, 
