@@ -19,17 +19,26 @@ const Card = ({ children, className }) => (
     <div className={`flex border-b mb-4 ${className}`}>{children}</div>
   );
   
-  const TabsTrigger = ({ value, children }) => (
-    <button className="px-4 py-2 hover:bg-gray-100">{children}</button>
-  );
+  const TabsTrigger = ({ value, children, onClick, isActive }) => (
+    <button
+        className={`px-4 py-2 ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
+        onClick={onClick}
+    >
+        {children}
+    </button>
+);
+
   
-  const TabsContent = ({ value, children }) => (
-    <div>{children}</div>
-  );
+  const TabsContent = ({ value, children, isActive }) => {
+    if (isActive) {
+        return <div>{children}</div>;
+    }
+    return null;
+};
+
 
   const { useState, useEffect } = React;
 
-  // Adjust the Tab structure with dynamic state
   const Tabs = ({ children, defaultValue, className }) => {
       const [activeTab, setActiveTab] = useState(defaultValue);
   
@@ -40,7 +49,7 @@ const Card = ({ children, className }) => (
                       if (child.type === TabsTrigger) {
                           return React.cloneElement(child, {
                               onClick: () => setActiveTab(child.props.value),
-                              className: activeTab === child.props.value ? 'px-4 py-2 bg-gray-200' : 'px-4 py-2 hover:bg-gray-100'
+                              isActive: activeTab === child.props.value
                           });
                       }
                       return child;
@@ -48,14 +57,17 @@ const Card = ({ children, className }) => (
               </div>
   
               {React.Children.map(children, (child) => {
-                  if (child.type === TabsContent && child.props.value === activeTab) {
-                      return child;
+                  if (child.type === TabsContent) {
+                      return React.cloneElement(child, {
+                          isActive: activeTab === child.props.value
+                      });
                   }
-                  return null;
+                  return child;
               })}
           </div>
       );
   };
+  
 
 if (typeof Recharts === 'undefined') {
     console.error('Recharts not loaded!');
@@ -144,60 +156,61 @@ return (
 // Panel Components
 const InternationalCurrencyPanel = ({ data }) => {
     return (
-        <TabsContent value="currency_measures">
+        <TabsContent value="currency_measures" isActive={true}>
             {/* Store of Value */}
             <h4 className="text-xl font-semibold mt-4">Store of Value</h4>
-            <FeatureChart 
-                title="Official Foreign Exchange Reserves" 
-                data={data} 
-                dataKeys={[{ dataKey: 'reserve_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'reserve_share_EUR', name: 'EUR', currency: 'EMU' }]} 
-                yAxisLabel="Share (%)" 
+            <FeatureChart
+                title="Official Foreign Exchange Reserves"
+                data={data}
+                dataKeys={[{ dataKey: 'reserve_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'reserve_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                yAxisLabel="Share (%)"
             />
-            <FeatureChart 
-                title="Currency Composition of Outstanding International Debt Securities" 
-                data={data} 
-                dataKeys={[{ dataKey: 'debt_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'debt_share_EUR', name: 'EUR', currency: 'EMU' }]} 
-                yAxisLabel="Share (%)" 
+            <FeatureChart
+                title="Currency Composition of Outstanding International Debt Securities"
+                data={data}
+                dataKeys={[{ dataKey: 'debt_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'debt_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                yAxisLabel="Share (%)"
             />
             
             {/* Medium of Exchange */}
             <h4 className="text-xl font-semibold mt-4">Medium of Exchange</h4>
-            <FeatureChart 
-                title="FX Market Turnover" 
-                data={data} 
-                dataKeys={[{ dataKey: 'fx_turnover_USD', name: 'USD', currency: 'USA' }, { dataKey: 'fx_turnover_EUR', name: 'EUR', currency: 'EMU' }]} 
-                yAxisLabel="Share (%)" 
+            <FeatureChart
+                title="FX Market Turnover"
+                data={data}
+                dataKeys={[{ dataKey: 'fx_turnover_USD', name: 'USD', currency: 'USA' }, { dataKey: 'fx_turnover_EUR', name: 'EUR', currency: 'EMU' }]}
+                yAxisLabel="Share (%)"
             />
-            <FeatureChart 
-                title="SWIFT Payment Share" 
-                data={data} 
-                dataKeys={[{ dataKey: 'swift_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'swift_share_EUR', name: 'EUR', currency: 'EMU' }]} 
-                yAxisLabel="Share (%)" 
+            <FeatureChart
+                title="SWIFT Payment Share"
+                data={data}
+                dataKeys={[{ dataKey: 'swift_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'swift_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                yAxisLabel="Share (%)"
             />
             
             {/* Unit of Account */}
             <h4 className="text-xl font-semibold mt-4">Unit of Account</h4>
-            <FeatureChart 
-                title="Currency Anchor Share" 
-                data={data} 
-                dataKeys={[{ dataKey: 'anchor_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'anchor_share_EUR', name: 'EUR', currency: 'EMU' }]} 
-                yAxisLabel="Share (%)" 
+            <FeatureChart
+                title="Currency Anchor Share"
+                data={data}
+                dataKeys={[{ dataKey: 'anchor_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'anchor_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                yAxisLabel="Share (%)"
             />
-            <FeatureChart 
-                title="Currency Composition of External Debt" 
-                data={data} 
-                dataKeys={[{ dataKey: 'debt_denom_USD', name: 'USD', currency: 'USA' }, { dataKey: 'debt_denom_EUR', name: 'EUR', currency: 'EMU' }]} 
-                yAxisLabel="Share (%)" 
+            <FeatureChart
+                title="Currency Composition of External Debt"
+                data={data}
+                dataKeys={[{ dataKey: 'debt_denom_USD', name: 'USD', currency: 'USA' }, { dataKey: 'debt_denom_EUR', name: 'EUR', currency: 'EMU' }]}
+                yAxisLabel="Share (%)"
             />
-            <FeatureChart 
-                title="Currency Denomination of International Bond Issuance" 
-                data={data} 
-                dataKeys={[{ dataKey: 'bond_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'bond_share_EUR', name: 'EUR', currency: 'EMU' }]} 
-                yAxisLabel="Share (%)" 
+            <FeatureChart
+                title="Currency Denomination of International Bond Issuance"
+                data={data}
+                dataKeys={[{ dataKey: 'bond_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'bond_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                yAxisLabel="Share (%)"
             />
         </TabsContent>
     );
 };
+
 
 const EconomicPanel = ({ data }) => (
 <TabsContent value="economic">
@@ -335,8 +348,7 @@ const GeopoliticalPanel = ({ data }) => (
 function FeatureDashboard() {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    
+
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -344,16 +356,12 @@ function FeatureDashboard() {
                 const response = await fetch('https://currency-intl-data.s3.us-east-1.amazonaws.com/combined_currency_data_20250201.xlsx');
                 const arrayBuffer = await response.arrayBuffer();
                 const data = new Uint8Array(arrayBuffer);
-                const workbook = XLSX.read(data, {
-                    cellDates: true,
-                    cellNF: true
-                });
-                
+                const workbook = XLSX.read(data, { cellDates: true, cellNF: true });
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                 const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-                
+
                 const processedData = jsonData.map(row => ({
-    year: row.__EMPTY,
+                    year: row.__EMPTY,
     // International Currency Measures
     reserve_share_USD: parseFloat(row.reserve_share_USD) || null,
     reserve_share_EUR: parseFloat(row.reserve_share_EUR) || null,
@@ -543,7 +551,12 @@ return (
             </TabsList>
 
             <InternationalCurrencyPanel data={data} />
-            {/* Other Panel Components */}
+            <EconomicPanel data={data} />
+            <FinancialPanel data={data} />
+            <CurrencyPanel data={data} />
+            <OpennessPanel data={data} />
+            <InstitutionalPanel data={data} />
+            <GeopoliticalPanel data={data} />
         </Tabs>
     </div>
 );
