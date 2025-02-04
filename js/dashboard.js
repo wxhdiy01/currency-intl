@@ -400,22 +400,31 @@ function FeatureDashboard() {
     const [activeTab, setActiveTab] = useState('currency_measures');
   
     useEffect(() => {
-      const loadData = async () => {
-        try {
-          const response = await fetch('https://currency-intl-data.s3.us-east-1.amazonaws.com/combined_currency_data_20250201.xlsx');
-          const arrayBuffer = await response.arrayBuffer();
-          const data = new Uint8Array(arrayBuffer);
-          const workbook = XLSX.read(response, { 
-            cellDates: true,
-            cellNF: true,
-            cellStyles: true,
-            cellFormulas: true,
-            sheetStubs: true
-          });
-          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+        const loadData = async () => {
+            try {
+              const response = await fetch('https://currency-intl-data.s3.us-east-1.amazonaws.com/combined_currency_data_20250201.xlsx');
+              const blob = await response.blob();
+              
+              const arrayBuffer = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.onerror = (e) => reject(e);
+                reader.readAsArrayBuffer(blob);
+              });
+              
+              const data = new Uint8Array(arrayBuffer);
+              const workbook = XLSX.read(data, { 
+                type: 'array',
+                cellDates: true,
+                cellNF: true,
+                cellStyles: true,
+                cellFormulas: true,
+                sheetStubs: true
+              });
+              const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+              const jsonData = XLSX.utils.sheet_to_json(firstSheet);
 
-                const processedData = jsonData.map(row => ({
+              const processedData = jsonData.map(row => ({
                     year: row.__EMPTY,
     // International Currency Measures
     reserve_share_USD: parseFloat(row.reserve_share_USD) || null,
