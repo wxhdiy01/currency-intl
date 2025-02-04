@@ -205,8 +205,9 @@ const InternationalCurrencyPanel = ({ data }) => {
         { dataKey: 'debt_share_JPY', name: 'JPY', currency: 'JPN' }
     ];
 
+
     return (
-        <TabsContent value="currency_measures" isActive={true}>
+        <div>
             {/* Store of Value */}
             <h4 className="text-xl font-semibold mt-4">Store of Value</h4>
             <FeatureChart
@@ -257,141 +258,140 @@ const InternationalCurrencyPanel = ({ data }) => {
                 dataKeys={bondConfig}
                 yAxisLabel="Share (%)"
             />
-        </TabsContent>
+        </div>
     );
 };
 
-
 const EconomicPanel = ({ data }) => (
-<TabsContent value="economic">
-    <FeatureChart 
-    title="GDP" 
-    data={data} 
-    dataKeys={createConfig('GDP')} 
-    yAxisLabel="Share of World GDP (%)" 
-    />
-    <FeatureChart 
-    title="Foreign Trade Volume" 
-    data={data} 
-    dataKeys={createConfig('Trade')} 
-    yAxisLabel="Share of World Trade (%)" 
-    />
-</TabsContent>
+    <div>
+        <FeatureChart 
+            title="GDP" 
+            data={data} 
+            dataKeys={createConfig('GDP')} 
+            yAxisLabel="Share of World GDP (%)" 
+        />
+        <FeatureChart 
+            title="Foreign Trade Volume" 
+            data={data} 
+            dataKeys={createConfig('Trade')} 
+            yAxisLabel="Share of World Trade (%)" 
+        />
+    </div>
 );
 
 const FinancialPanel = ({ data }) => (
-<TabsContent value="financial">
-    <FeatureChart 
-    title="Stock Market Capitalization" 
-    data={data} 
-    dataKeys={createConfig('market_cap')} 
-    yAxisLabel="Share of GDP (%)" 
-    />
-    <FeatureChart 
-    title="Government Bond Outstanding" 
-    data={data} 
-    dataKeys={createConfig('govdebt')} 
-    yAxisLabel="Share of GDP (%)" 
-    />
-    <FeatureChart 
-    title="Private Credit" 
-    data={data} 
-    dataKeys={createConfig('PrivateCredit')} 
-    yAxisLabel="Share of GDP (%)" 
-    />
-</TabsContent>
+    <div>
+        <FeatureChart 
+            title="Stock Market Capitalization" 
+            data={data} 
+            dataKeys={createConfig('market_cap')} 
+            yAxisLabel="Share of GDP (%)" 
+        />
+        <FeatureChart 
+            title="Government Bond Outstanding" 
+            data={data} 
+            dataKeys={createConfig('govdebt')} 
+            yAxisLabel="Share of GDP (%)" 
+        />
+        <FeatureChart 
+            title="Private Credit" 
+            data={data} 
+            dataKeys={createConfig('PrivateCredit')} 
+            yAxisLabel="Share of GDP (%)" 
+        />
+    </div>
 );
 
 const CurrencyPanel = ({ data }) => (
-<TabsContent value="currency">
-    <FeatureChart 
-    title="CPI Inflation Rate" 
-    data={data} 
-    dataKeys={createConfig('inflation')} 
-    yAxisLabel="(%)" 
-    />
-    <FeatureChart 
-    title="Exchange Rate Volatility" 
-    data={data} 
-    dataKeys={createConfig('EXVOL')} 
-    yAxisLabel="Volatility" 
-    />
-    <FeatureChart 
-    title="Real GDP Growth Rate" 
-    data={data} 
-    dataKeys={createConfig('gdpgrowth')} 
-    yAxisLabel="(%)" 
-    />
-    <FeatureChart 
-    title="Real Interest Rate" 
-    data={data} 
-    dataKeys={createConfig('r')} 
-    yAxisLabel="(%)" 
-    />
-</TabsContent>
+    <div>
+        <FeatureChart 
+            title="CPI Inflation Rate" 
+            data={data} 
+            dataKeys={createConfig('inflation')} 
+            yAxisLabel="(%)" 
+        />
+        <FeatureChart 
+            title="Exchange Rate Volatility" 
+            data={data} 
+            dataKeys={createConfig('EXVOL')} 
+            yAxisLabel="Volatility" 
+        />
+        <FeatureChart 
+            title="Real GDP Growth Rate" 
+            data={data} 
+            dataKeys={createConfig('gdpgrowth')} 
+            yAxisLabel="(%)" 
+        />
+        <FeatureChart 
+            title="Real Interest Rate" 
+            data={data} 
+            dataKeys={createConfig('r')} 
+            yAxisLabel="(%)" 
+        />
+    </div>
 );
 
 const OpennessPanel = ({ data }) => (
-<TabsContent value="openness">
-    <FeatureChart 
-    title="Financial Openness (Chinn-Ito Index)" 
-    data={data} 
-    dataKeys={createConfig('kaopen')} 
-    yAxisLabel="Index" 
-    />
-</TabsContent>
+    <div>
+        <FeatureChart 
+            title="Financial Openness (Chinn-Ito Index)" 
+            data={data} 
+            dataKeys={createConfig('kaopen')} 
+            yAxisLabel="Index" 
+        />
+    </div>
 );
 
 const InstitutionalPanel = ({ data }) => (
-<TabsContent value="institutional">
-    <FeatureChart 
-    title="Economic Freedom Index" 
-    data={data} 
-    dataKeys={createConfig('freedom')} 
-    yAxisLabel="Index" 
-    />
-</TabsContent>
+    <div>
+        <FeatureChart 
+            title="Economic Freedom Index" 
+            data={data} 
+            dataKeys={createConfig('freedom')} 
+            yAxisLabel="Index" 
+        />
+    </div>
 );
 
 const GeopoliticalPanel = ({ data }) => (
-<TabsContent value="geopolitical">
-    <FeatureChart 
-    title="Military Expenditure" 
-    data={data} 
-    dataKeys={createConfig('military')} 
-    yAxisLabel="Share of World Total (%)" 
-    />
-    <FeatureChart 
-    title="Armed Forces Personnel" 
-    data={data} 
-    dataKeys={createConfig('ArmedPerson')} 
-    yAxisLabel="Share of World Total (%)" 
-    />
-    <FeatureChart 
-    title="FDI Assets Abroad" 
-    data={data} 
-    dataKeys={createConfig('FDI')} 
-    yAxisLabel="Share of GDP (%)" 
-    />
-    <FeatureChart 
-    title="Patent Applications" 
-    data={data} 
-    dataKeys={createConfig('patents')} 
-    yAxisLabel="Share of World Total (%)" 
-    />
-    <FeatureChart 
-    title="Sanctions (as Sender)" 
-    data={data} 
-    dataKeys={createConfig('sanction_sender')} 
-    yAxisLabel="Number of Sanctions" 
-    />
-    <FeatureChart 
-    title="Sanctions (as Target)" 
-    data={data} 
-    dataKeys={createConfig('sanction_target')} 
-    yAxisLabel="Number of Sanctions" 
-    />
-</TabsContent>
+    <div>
+        <FeatureChart 
+            title="Military Expenditure" 
+            data={data} 
+            dataKeys={createConfig('military')} 
+            yAxisLabel="Share of World Total (%)" 
+        />
+        <FeatureChart 
+            title="Armed Forces Personnel" 
+            data={data} 
+            dataKeys={createConfig('ArmedPerson')} 
+            yAxisLabel="Share of World Total (%)" 
+        />
+        <FeatureChart 
+            title="FDI Assets Abroad" 
+            data={data} 
+            dataKeys={createConfig('FDI')} 
+            yAxisLabel="Share of GDP (%)" 
+        />
+        <FeatureChart 
+            title="Patent Applications" 
+            data={data} 
+            dataKeys={createConfig('patents')} 
+            yAxisLabel="Share of World Total (%)" 
+        />
+        <FeatureChart 
+            title="Sanctions (as Sender)" 
+            data={data} 
+            dataKeys={createConfig('sanction_sender')} 
+            yAxisLabel="Number of Sanctions" 
+        />
+        <FeatureChart 
+            title="Sanctions (as Target)" 
+            data={data} 
+            dataKeys={createConfig('sanction_target')} 
+            yAxisLabel="Number of Sanctions" 
+        />
+    </div>
 );
 
 // Main Dashboard Component
