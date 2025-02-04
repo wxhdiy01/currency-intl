@@ -35,7 +35,7 @@ const { useState, useEffect } = React;
 const { 
 LineChart, Line, XAxis, YAxis, CartesianGrid, 
 Tooltip, Legend, ResponsiveContainer 
-} = window.Recharts;  // Change this line to use window.Recharts
+} = window.Recharts || Recharts;  // Fallback to either global version
 
 // Define all our utility constants
 const currencyColors = {
