@@ -32,10 +32,13 @@ const Card = ({ children, className }) => (
   );
 
 const { useState, useEffect } = React;
+if (!window.Recharts) {
+    console.error('Recharts not loaded!');
+}
 const { 
-LineChart, Line, XAxis, YAxis, CartesianGrid, 
-Tooltip, Legend, ResponsiveContainer 
-} = window.Recharts || Recharts;  // Fallback to either global version
+    LineChart, Line, XAxis, YAxis, CartesianGrid, 
+    Tooltip, Legend, ResponsiveContainer 
+} = window.Recharts;
 
 // Define all our utility constants
 const currencyColors = {
