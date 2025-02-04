@@ -119,6 +119,59 @@ return (
 
 // Panel Components
 const InternationalCurrencyPanel = ({ data }) => {
+    const reserveConfig = [
+        { dataKey: 'reserve_share_USD', name: 'USD', currency: 'USA' },
+        { dataKey: 'reserve_share_EUR', name: 'EUR', currency: 'EMU' },
+        { dataKey: 'reserve_share_GBP', name: 'GBP', currency: 'GBR' },
+        { dataKey: 'reserve_share_JPY', name: 'JPY', currency: 'JPN' },
+        { dataKey: 'reserve_share_CNY', name: 'CNY', currency: 'CHN' },
+        { dataKey: 'reserve_share_CHF', name: 'CHF', currency: 'CHE' }
+    ];
+    
+    const anchorConfig = [
+        { dataKey: 'anchor_share_USD', name: 'USD', currency: 'USA' },
+        { dataKey: 'anchor_share_EUR', name: 'EUR', currency: 'EMU' },
+        { dataKey: 'anchor_share_GBP', name: 'GBP', currency: 'GBR' },
+        { dataKey: 'anchor_share_JPY', name: 'JPY', currency: 'JPN' }
+    ];
+    
+    const fxConfig = [
+        { dataKey: 'fx_turnover_USD', name: 'USD', currency: 'USA' },
+        { dataKey: 'fx_turnover_EUR', name: 'EUR', currency: 'EMU' },
+        { dataKey: 'fx_turnover_GBP', name: 'GBP', currency: 'GBR' },
+        { dataKey: 'fx_turnover_JPY', name: 'JPY', currency: 'JPN' },
+        { dataKey: 'fx_turnover_CNY', name: 'CNY', currency: 'CHN' },
+        { dataKey: 'fx_turnover_CHF', name: 'CHF', currency: 'CHE' }
+    ];
+    
+    const swiftConfig = [
+        { dataKey: 'swift_share_USD', name: 'USD', currency: 'USA' },
+        { dataKey: 'swift_share_EUR', name: 'EUR', currency: 'EMU' },
+        { dataKey: 'swift_share_GBP', name: 'GBP', currency: 'GBR' },
+        { dataKey: 'swift_share_JPY', name: 'JPY', currency: 'JPN' },
+        { dataKey: 'swift_share_CNY', name: 'CNY', currency: 'CHN' },
+        { dataKey: 'swift_share_CHF', name: 'CHF', currency: 'CHE' }
+    ];
+    
+    const debtDenomConfig = [
+        { dataKey: 'debt_denom_USD', name: 'USD', currency: 'USA' },
+        { dataKey: 'debt_denom_EUR', name: 'EUR', currency: 'EMU' },
+        { dataKey: 'debt_denom_GBP', name: 'GBP', currency: 'GBR' },
+        { dataKey: 'debt_denom_JPY', name: 'JPY', currency: 'JPN' },
+        { dataKey: 'debt_denom_CHF', name: 'CHF', currency: 'CHE' }
+    ];
+    
+    const bondConfig = [
+        { dataKey: 'bond_share_USD', name: 'USD', currency: 'USA' },
+        { dataKey: 'bond_share_EUR', name: 'EUR', currency: 'EMU' }
+    ];
+    
+    const debtShareConfig = [
+        { dataKey: 'debt_share_USD', name: 'USD', currency: 'USA' },
+        { dataKey: 'debt_share_EUR', name: 'EUR', currency: 'EMU' },
+        { dataKey: 'debt_share_JPY', name: 'JPY', currency: 'JPN' }
+    ];
+
     return (
         <TabsContent value="currency_measures" isActive={true}>
             {/* Store of Value */}
@@ -126,13 +179,13 @@ const InternationalCurrencyPanel = ({ data }) => {
             <FeatureChart
                 title="Official Foreign Exchange Reserves"
                 data={data}
-                dataKeys={[{ dataKey: 'reserve_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'reserve_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                dataKeys={reserveConfig}
                 yAxisLabel="Share (%)"
             />
             <FeatureChart
                 title="Currency Composition of Outstanding International Debt Securities"
                 data={data}
-                dataKeys={[{ dataKey: 'debt_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'debt_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                dataKeys={debtShareConfig}
                 yAxisLabel="Share (%)"
             />
             
@@ -141,13 +194,13 @@ const InternationalCurrencyPanel = ({ data }) => {
             <FeatureChart
                 title="FX Market Turnover"
                 data={data}
-                dataKeys={[{ dataKey: 'fx_turnover_USD', name: 'USD', currency: 'USA' }, { dataKey: 'fx_turnover_EUR', name: 'EUR', currency: 'EMU' }]}
+                dataKeys={fxConfig}
                 yAxisLabel="Share (%)"
             />
             <FeatureChart
                 title="SWIFT Payment Share"
                 data={data}
-                dataKeys={[{ dataKey: 'swift_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'swift_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                dataKeys={swiftConfig}
                 yAxisLabel="Share (%)"
             />
             
@@ -156,19 +209,19 @@ const InternationalCurrencyPanel = ({ data }) => {
             <FeatureChart
                 title="Currency Anchor Share"
                 data={data}
-                dataKeys={[{ dataKey: 'anchor_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'anchor_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                dataKeys={anchorConfig}
                 yAxisLabel="Share (%)"
             />
             <FeatureChart
                 title="Currency Composition of External Debt"
                 data={data}
-                dataKeys={[{ dataKey: 'debt_denom_USD', name: 'USD', currency: 'USA' }, { dataKey: 'debt_denom_EUR', name: 'EUR', currency: 'EMU' }]}
+                dataKeys={debtDenomConfig}
                 yAxisLabel="Share (%)"
             />
             <FeatureChart
                 title="Currency Denomination of International Bond Issuance"
                 data={data}
-                dataKeys={[{ dataKey: 'bond_share_USD', name: 'USD', currency: 'USA' }, { dataKey: 'bond_share_EUR', name: 'EUR', currency: 'EMU' }]}
+                dataKeys={bondConfig}
                 yAxisLabel="Share (%)"
             />
         </TabsContent>
