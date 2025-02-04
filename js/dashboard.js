@@ -33,9 +33,9 @@ const Card = ({ children, className }) => (
 
 const { useState, useEffect } = React;
 const { 
-  LineChart, Line, XAxis, YAxis, CartesianGrid, 
-  Tooltip, Legend, ResponsiveContainer 
-} = Recharts;
+LineChart, Line, XAxis, YAxis, CartesianGrid, 
+Tooltip, Legend, ResponsiveContainer 
+} = window.Recharts;  // Change this line to use window.Recharts
 
 // Define all our utility constants
 const currencyColors = {
