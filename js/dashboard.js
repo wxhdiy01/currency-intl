@@ -15,59 +15,24 @@ const Card = ({ children, className }) => (
     <div className="p-4">{children}</div>
   );
   
+  const Tabs = ({ children, defaultValue, className }) => (
+    <div className={className}>{children}</div>
+  );
+  
   const TabsList = ({ children, className }) => (
     <div className={`flex border-b mb-4 ${className}`}>{children}</div>
   );
   
-  const TabsTrigger = ({ value, children, onClick, isActive }) => (
-    <button
-        className={`px-4 py-2 ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`}
-        onClick={onClick}
-    >
-        {children}
-    </button>
-);
+  const TabsTrigger = ({ value, children }) => (
+    <button className="px-4 py-2 hover:bg-gray-100">{children}</button>
+  );
   
-  const TabsContent = ({ value, children, isActive }) => {
-    return (
-        <div className={`${isActive ? "block" : "hidden"}`}>
-            {children}
-        </div>
-    );
-};
+  const TabsContent = ({ value, children }) => (
+    <div>{children}</div>
+  );
 
   const { useState, useEffect } = React;
 
-  const Tabs = ({ children, defaultValue, className }) => {
-    const [activeTab, setActiveTab] = useState(defaultValue);
-
-    return (
-        <div className={className}>
-            <div className="flex border-b mb-4">
-                {React.Children.map(children, (child) => {
-                    if (child.type === TabsTrigger) {
-                        return React.cloneElement(child, {
-                            onClick: () => setActiveTab(child.props.value),
-                            isActive: activeTab === child.props.value
-                        });
-                    }
-                    return child;
-                })}
-            </div>
-
-            <div className="space-y-6 mt-4">
-                {React.Children.map(children, (child) => {
-                    if (child.type === TabsContent && child.props.value === activeTab) {
-                        return child;
-                    }
-                    return null;
-                })}
-            </div>
-        </div>
-    );
-};
-
- 
 if (typeof Recharts === 'undefined') {
     console.error('Recharts not loaded!');
 } else {
