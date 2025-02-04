@@ -1,3 +1,4 @@
 theme: jekyll-theme-architect
 title: International Currency Status Dashboard
 description: Interactive visualization of international currency metrics and economic indicators
+baseurl: "/currency-intl"
