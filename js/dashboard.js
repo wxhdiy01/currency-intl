@@ -32,13 +32,15 @@ const Card = ({ children, className }) => (
   );
 
 const { useState, useEffect } = React;
-if (!window.Recharts) {
+if (typeof Recharts === 'undefined') {
     console.error('Recharts not loaded!');
+} else {
+    console.log('Recharts loaded successfully');
 }
 const { 
     LineChart, Line, XAxis, YAxis, CartesianGrid, 
     Tooltip, Legend, ResponsiveContainer 
-} = window.Recharts;
+} = Recharts;  // Changed from window.Recharts to just Recharts
 
 // Define all our utility constants
 const currencyColors = {
